@@ -4,4 +4,3 @@ class IndustryType {
 
   IndustryType(this.name, this.image);
 }
-

@@ -90,7 +90,11 @@ class _StartScreenState extends State<StartScreen> {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () => context.go('/calculator'),
+                  onPressed: () {
+                    context.go(
+                      '/calculator?selectedIndustry=${selectedIndustry?.name}',
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(
                       0xFF007BFF,

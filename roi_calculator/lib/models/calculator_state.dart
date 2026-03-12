@@ -12,7 +12,7 @@ class CalculatorState {
   double inPersonCost;
   double ecommerceCost;
   double mobileCost;
-
+  String selectedChannel;
   double phoneMigration;
   double mailMigration;
   double personalMigration;
@@ -40,6 +40,7 @@ class CalculatorState {
     this.inPersonCost = 40,
     this.ecommerceCost = 10,
     this.mobileCost = 10,
+    this.selectedChannel = "Mobile",
     this.phoneMigration = 10,
     this.mailMigration = 20,
     this.personalMigration = 10,

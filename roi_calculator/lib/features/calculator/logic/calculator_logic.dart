@@ -1,4 +1,5 @@
 import 'package:roi_calculator/models/calculator_state.dart';
+import 'package:roi_calculator/models/roi_result_model.dart';
 
 class RoiCalculator {
   static double Orders(CalculatorState state) {
@@ -58,5 +59,35 @@ class RoiCalculator {
     final cost = state.capex + (state.opex * 12);
 
     return (benefit - cost) / cost * 100;
+  }
+
+  static RoiResult calculateResult(CalculatorState state) {
+    final orders = state.yearlyRevenue / state.avgOrderValue;
+
+    final errorSavings = orders * (state.errorRate / 100) * state.errorCost;
+
+    final migrationSavings =
+        orders * 0.2 * (state.phoneCost - state.mobileCost);
+
+    final salesGrowth =
+        state.yearlyRevenue *
+        (state.salesGrowth / 100) *
+        (state.grossMargin / 100);
+
+    final benefit = errorSavings + migrationSavings + salesGrowth;
+
+    final cost = state.capex + (state.opex * 12);
+
+    final roi = ((benefit - cost) / cost) * 100;
+
+    return RoiResult(
+      roi: roi,
+      benefit: benefit,
+      cost: cost,
+      yearlyOrders: orders,
+      errorSavings: errorSavings,
+      migrationSavings: migrationSavings,
+      salesGrowthProfit: salesGrowth,
+    );
   }
 }
