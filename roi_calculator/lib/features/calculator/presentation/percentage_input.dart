@@ -67,15 +67,31 @@ class _PercentageInputState extends State<PercentageInput> {
       children: [
         Text(widget.label),
         const SizedBox(height: 6),
-        TextField(
-          controller: _controller,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          decoration: InputDecoration(
-            suffixText: "%",
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        Theme(
+          data: Theme.of(context).copyWith(
+            textSelectionTheme: const TextSelectionThemeData(
+              cursorColor: Colors.blue,
+              selectionColor: Color(0x553219FF), // półprzezroczysty niebieski
+              selectionHandleColor: Colors.blue,
+            ),
           ),
-          onChanged: _handleChange,
+          child: TextField(
+            controller: _controller,
+            cursorColor: Colors.blue,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            decoration: InputDecoration(
+              suffixText: "%",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Colors.blue, width: 2),
+              ),
+            ),
+            onChanged: _handleChange,
+          ),
         ),
       ],
     );

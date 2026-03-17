@@ -8,6 +8,7 @@ class SliderInput extends StatefulWidget {
   final int? divisions; // Opcjonalne: "kroki" suwaka
   final String suffix;
   final Function(double) onChanged;
+  final double step;
 
   const SliderInput({
     super.key,
@@ -18,6 +19,7 @@ class SliderInput extends StatefulWidget {
     this.max = 100,
     this.divisions,
     this.suffix = "",
+    this.step = 10000,
   });
 
   @override
@@ -52,7 +54,9 @@ class _SliderInputState extends State<SliderInput> {
       children: [
         // Nagłówek: Etykieta i aktualna wartość
         SizedBox(
+          width: double.infinity,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 widget.label,
@@ -84,13 +88,14 @@ class _SliderInputState extends State<SliderInput> {
             value: _currentValue,
             min: widget.min,
             max: widget.max,
-            divisions: widget.divisions,
-            label: _currentValue.toStringAsFixed(1), // Dymek nad suwakiem
+            divisions: ((widget.max - widget.min) / widget.step).round(),
             onChanged: (newValue) {
+              double steppedValue =
+                  (newValue / widget.step).round() * widget.step;
               setState(() {
-                _currentValue = newValue;
+                _currentValue = steppedValue;
               });
-              widget.onChanged(newValue);
+              widget.onChanged(steppedValue);
             },
           ),
         ),

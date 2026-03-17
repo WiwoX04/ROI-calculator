@@ -58,22 +58,41 @@ class _NumberInputState extends State<NumberInput> {
       children: [
         Text(widget.label),
         const SizedBox(height: 6),
-        TextField(
-          controller: _controller,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          inputFormatters: [
-            // Pozwala na liczby ułamkowe
-            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
-          ],
-          decoration: InputDecoration(
-            suffixText: widget.suffix,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+
+        Theme(
+          data: Theme.of(context).copyWith(
+            textSelectionTheme: const TextSelectionThemeData(
+              cursorColor: Colors.blue,
+              selectionColor: Color(0x553219FF), // półprzezroczysty niebieski
+              selectionHandleColor: Colors.blue,
+            ),
           ),
-          onChanged: (value) {
-            // Zamiana przecinka na kropkę w razie użycia lokalnej klawiatury
-            final normalizedValue = value.replaceAll(',', '.');
-            widget.onChanged(double.tryParse(normalizedValue) ?? 0);
-          },
+          child: TextField(
+            controller: _controller,
+            cursorColor: Colors.blue,
+
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [
+              // Pozwala na liczby ułamkowe
+              FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+            ],
+            decoration: InputDecoration(
+              suffixText: widget.suffix,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Colors.blue, width: 2),
+              ),
+            ),
+
+            onChanged: (value) {
+              // Zamiana przecinka na kropkę w razie użycia lokalnej klawiatury
+              final normalizedValue = value.replaceAll(',', '.');
+              widget.onChanged(double.tryParse(normalizedValue) ?? 0);
+            },
+          ),
         ),
       ],
     );

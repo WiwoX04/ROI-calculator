@@ -1,7 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class InsightsScreen extends StatelessWidget {
-  const InsightsScreen({Key? key}) : super(key: key);
+  final double roi;
+  final double benefit;
+  final double marginIncrease;
+  final double roitime;
+  final double esavings;
+  final double msavings;
+  final selectedIndustry;
+  const InsightsScreen({
+    super.key,
+    required this.roi,
+    required this.benefit,
+    required this.marginIncrease,
+    required this.roitime,
+    required this.esavings,
+    required this.msavings,
+    required this.selectedIndustry,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,10 +30,6 @@ class InsightsScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         // Dodajemy przycisk powrotu (jeśli to kolejny ekran)
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
         title: Row(
           children: [
             Container(
@@ -29,7 +42,7 @@ class InsightsScreen extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             const Text(
-              'Wholesale ROI',
+              'Kalkulator Roi',
               style: TextStyle(
                 color: Colors.black87,
                 fontSize: 16,
@@ -93,7 +106,7 @@ class InsightsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               _buildFeatureCard(
-                icon: Icons.wb_sunny_outlined,
+                icon: Icons.touch_app,
                 title: 'Duże przyciski',
                 description:
                     'Użytkownicy często mają rękawice lub pracują w trudnych warunkach. UI musi być \'pancerny\'',
@@ -107,14 +120,14 @@ class InsightsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               _buildFeatureCard(
-                icon: Icons.wb_sunny_outlined,
+                icon: Icons.group,
                 title: 'Współpraca handlowców',
                 description:
                     'System prowizyjny musi wspierać zamówienia online, by handlowcy byli ambasadorami aplikacji.',
               ),
               const SizedBox(height: 20),
               _buildFeatureCard(
-                icon: Icons.wb_sunny_outlined,
+                icon: Icons.build,
                 title: 'Narzędzia branżowe',
                 description:
                     'Kalkulatory i przeliczniki wbudowane w aplikacje to ekstra wartość, która przyciąga klienta codziennie.',
@@ -124,7 +137,9 @@ class InsightsScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.go('/finish');
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(
                       0xFF007BFF,

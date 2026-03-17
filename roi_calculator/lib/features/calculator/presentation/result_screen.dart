@@ -1,25 +1,78 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:roi_calculator/assets/services/mail_service.dart';
 import 'package:roi_calculator/assets/services/pdf_service.dart';
 
 class ResultScreen extends StatelessWidget {
   final double roi;
   final double benefit;
-  final double cost;
-  final double orders;
+  final double marginIncrease;
+  final double roitime;
   final double esavings;
   final double msavings;
-  final double profit;
+  final selectedIndustry;
+  final double yearlyRevenue;
+  final double avgOrderValue;
+
+  final double phoneShare;
+  final double mailShare;
+  final double inPersonShare;
+  final double ecommerceShare;
+
+  final double phoneCost;
+  final double mailCost;
+  final double inPersonCost;
+  final double ecommerceCost;
+  final double mobileCost;
+  final double phoneMigration;
+  final double mailMigration;
+  final double personalMigration;
+  final double ecommerceMigration;
+
+  final double salesGrowth;
+  final double grossMargin;
+
+  final double errorRate;
+  final double ecommerceRate;
+  final double errorCost;
+
+  final double capex;
+  final double opex;
 
   const ResultScreen({
     super.key,
     required this.roi,
     required this.benefit,
-    required this.cost,
-    required this.orders,
+    required this.marginIncrease,
+    required this.roitime,
     required this.esavings,
     required this.msavings,
-    required this.profit,
+    required this.selectedIndustry,
+
+    this.yearlyRevenue = 425000000,
+    this.avgOrderValue = 1200,
+    this.phoneShare = 50.0,
+    this.mailShare = 25.0,
+    this.inPersonShare = 10.0,
+    this.ecommerceShare = 15.0,
+    this.phoneCost = 15.0,
+    this.mailCost = 25.0,
+    this.inPersonCost = 40.0,
+    this.ecommerceCost = 5.0,
+    this.mobileCost = 2.0,
+    this.phoneMigration = 10.0,
+    this.mailMigration = 20.0,
+    this.personalMigration = 8.0,
+    this.ecommerceMigration = 20.0,
+    this.salesGrowth = 3.0,
+    this.grossMargin = 20.0,
+    this.errorRate = 2.0,
+    this.ecommerceRate = 0.5,
+    this.errorCost = 50.0,
+    this.capex = 140000,
+    this.opex = 35000,
   });
 
   @override
@@ -39,7 +92,7 @@ class ResultScreen extends StatelessWidget {
               iconColor: Colors.blue,
               iconBgColor: Colors.blue.withOpacity(0.1),
               title: 'ROCZNA OSZCZĘDNOŚĆ',
-              value: '450 000 zł',
+              value: "${benefit.round().toString()}zł",
             ),
             const SizedBox(height: 16),
             _buildMetricCard(
@@ -47,7 +100,7 @@ class ResultScreen extends StatelessWidget {
               iconColor: Colors.green,
               iconBgColor: Colors.green.withOpacity(0.1),
               title: 'ROI (ZWROT Z INWESTYCJI)',
-              value: '${roi}%',
+              value: '${roi.round()}%',
             ),
             const SizedBox(height: 16),
             _buildMetricCard(
@@ -55,12 +108,10 @@ class ResultScreen extends StatelessWidget {
               iconColor: Colors.orange,
               iconBgColor: Colors.orange.withOpacity(0.1),
               title: 'OKRES ZWROTU',
-              value: '5 miesięcy',
+              value: '${roitime.round()} miesięcy',
             ),
             const SizedBox(height: 24),
             _buildVisualisationCard(),
-            const SizedBox(height: 24),
-            _buildInfoBox(),
             const SizedBox(height: 24),
             _buildDetailedAnalysisCard(),
             const SizedBox(height: 24),
@@ -93,7 +144,7 @@ class ResultScreen extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           const Text(
-            'Wholesale ROI',
+            'Kalkulator Roi',
             style: TextStyle(
               color: Colors.black87,
               fontSize: 16,
@@ -106,20 +157,43 @@ class ResultScreen extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.download_rounded, color: Colors.black54),
           onPressed: () {
-            downloadPdf(
+            PdfService.downloadPdf(
               roi: roi,
               benefit: benefit,
-              cost: cost,
-              orders: orders,
+              marginIncrease: marginIncrease,
+              roiTime: roitime,
               errorSavings: esavings,
               migrationSavings: msavings,
-              salesGrowthProfit: profit,
+              selectedIndustry: selectedIndustry,
             );
           },
         ),
         IconButton(
           icon: const Icon(Icons.share_rounded, color: Colors.black54),
-          onPressed: () {},
+          onPressed: () {
+            if (Platform.isWindows) {
+              PdfService.downloadPdf(
+                roi: roi,
+                benefit: benefit,
+                marginIncrease: marginIncrease,
+                roiTime: roitime,
+                errorSavings: esavings,
+                migrationSavings: msavings,
+                selectedIndustry: selectedIndustry,
+              );
+              ;
+            } else if (Platform.isAndroid || Platform.isIOS) {
+              PdfService.downloadPdfMobile(
+                roi: roi,
+                benefit: benefit,
+                marginIncrease: marginIncrease,
+                roiTime: roitime,
+                errorSavings: esavings,
+                migrationSavings: msavings,
+                selectedIndustry: selectedIndustry,
+              );
+            }
+          },
         ),
       ],
     );
@@ -229,11 +303,23 @@ class ResultScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          _buildProgressBar('Oszczędność operacyjna', '180 000 zł', 0.45),
+          _buildProgressBar(
+            'Oszczędność operacyjna',
+            '${msavings.round()} zł',
+            msavings / 1000000,
+          ),
           const SizedBox(height: 16),
-          _buildProgressBar('Wzrost marży', '210 000 zł', 0.55),
+          _buildProgressBar(
+            'Wzrost marży',
+            '${marginIncrease.round()} zł',
+            marginIncrease / 1000000,
+          ),
           const SizedBox(height: 16),
-          _buildProgressBar('Redukcja błędów', '60 000 zł', 0.15),
+          _buildProgressBar(
+            'Redukcja błędów',
+            '${esavings.round()} zł',
+            esavings / 1000000,
+          ),
         ],
       ),
     );
@@ -293,74 +379,6 @@ class ResultScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoBox() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.blue[50],
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.blue.withOpacity(0.1)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(6),
-                decoration: const BoxDecoration(
-                  color: Colors.blue,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.lightbulb_outline,
-                  color: Colors.white,
-                  size: 16,
-                ),
-              ),
-              const SizedBox(width: 12),
-              const Text(
-                'Wymagany nakład pracy',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          RichText(
-            text: const TextSpan(
-              style: TextStyle(
-                color: Color(0xFF475569),
-                fontSize: 13,
-                height: 1.5,
-              ),
-              children: [
-                TextSpan(
-                  text:
-                      'Aby osiągnąć ten wynik, Twoi handlowcy muszą przekonać około ',
-                ),
-                TextSpan(
-                  text: '120 ekip',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-                TextSpan(
-                  text:
-                      ' do korzystania z aplikacji (średnio 4 ekipy na handlowca).',
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildDetailedAnalysisCard() {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -414,20 +432,12 @@ class ResultScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           const Divider(height: 1, color: Color(0xFFE2E8F0)),
-          _buildAnalysisRow('Oszczędność\noperacyjna', '180 000 zł'),
-          _buildAnalysisRow('Wzrost marży', '210 000 zł'),
-          _buildAnalysisRow('Redukcja błędów', '60 000 zł'),
           _buildAnalysisRow(
-            'Wartość analityczna',
-            'Strategic NPV',
-            isBlueValue: true,
+            'Oszczędność\noperacyjna',
+            '${msavings.round()} zł',
           ),
-          _buildAnalysisRow(
-            'Przewaga\nkonkurencyjna',
-            'High Impact',
-            isBlueValue: true,
-            showDivider: false,
-          ),
+          _buildAnalysisRow('Wzrost marży', '${marginIncrease.round()} zł'),
+          _buildAnalysisRow('Redukcja błędów', '${esavings.round()} zł'),
         ],
       ),
     );
@@ -485,12 +495,11 @@ class ResultScreen extends StatelessWidget {
                   '/insights'
                   '?roi=${roi}'
                   '&benefit=${benefit}'
-                  '&cost=${cost}'
-                  '&orders=${orders}'
+                  '&marginIncrease=${marginIncrease}'
                   '&esavings=${esavings}'
                   '&msavings=${msavings}'
-                  '&profit=${profit}';
-
+                  '&roitime=${roitime}'
+                  '&selectedIndustry=${selectedIndustry}';
               context.go(url);
             },
             style: ElevatedButton.styleFrom(
@@ -523,7 +532,34 @@ class ResultScreen extends StatelessWidget {
           width: double.infinity,
           height: 48,
           child: OutlinedButton.icon(
-            onPressed: () {},
+            onPressed: () {
+              final url = '/calculator'
+                      '?selectedIndustry=${selectedIndustry}'
+                      '&yearlyRevenue=${yearlyRevenue}'
+                      '&avgOrderValue=${avgOrderValue}'
+                      '&phoneShare=${phoneShare}'
+                      '&mailShare=${mailShare}'
+                      '&inPersonShare=${inPersonShare}'
+                      '&ecommerceShare=${ecommerceShare}'
+                      '&phoneCost=${phoneCost}'
+                      '&mailCost=${mailCost}'
+                      '&inPersonCost=${inPersonCost}'
+                      '&ecommerceCost=${ecommerceCost}'
+                      '&phoneMigration=${phoneMigration}'
+                      '&mailMigration=${mailMigration}'
+                      '&inPersonMigration=${personalMigration}'
+                      '&ecommerceMigration=${ecommerceMigration}'
+                      '&salesGrowth=${salesGrowth}'
+                      '&grossMargin=${grossMargin}'
+                      '&errorRate=${errorRate}'
+                      '&ecommerceRate=${ecommerceRate}'
+                      '&errorCost=${errorCost}'
+                      '&capex=${capex}'
+                      '&opex=${opex}'
+                  .replaceAll('\n', '')
+                  .replaceAll(' ', '');
+              context.go(url);
+            },
             icon: const Icon(
               Icons.edit_outlined,
               size: 18,
@@ -549,7 +585,16 @@ class ResultScreen extends StatelessWidget {
           width: double.infinity,
           height: 48,
           child: OutlinedButton.icon(
-            onPressed: () {},
+            onPressed:
+                () => sendResultsEmail(
+                  roiTime: roitime,
+                  benefit: benefit,
+                  roi: roi,
+                  marginIncrease: marginIncrease,
+                  migrationSavings: msavings,
+                  errorSavings: esavings,
+                  selectedIndustry: selectedIndustry,
+                ),
             icon: const Icon(
               Icons.mail_outline,
               size: 18,
@@ -579,7 +624,7 @@ class ResultScreen extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 24.0),
       child: Center(
         child: Text(
-          '© 2024 Wholesale ROI Calculator. Wszystkie prawa\nzastrzeżone.',
+          '© 2026 ROI Calculator. Wszystkie prawa\nzastrzeżone.',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 11, color: Colors.grey[500], height: 1.5),
         ),

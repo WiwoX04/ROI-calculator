@@ -16,8 +16,9 @@ class _StartScreenState extends State<StartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        foregroundColor: Color(0xFFE2E8F0),
         elevation: 0,
         title: Row(
           children: [
@@ -31,7 +32,7 @@ class _StartScreenState extends State<StartScreen> {
             ),
             const SizedBox(width: 8),
             const Text(
-              'Wholesale Roi',
+              'Kalkulator Roi',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -139,7 +140,7 @@ class _StartScreenState extends State<StartScreen> {
 
               // 7. Stopka
               const Text(
-                '© 2024 Wholesale ROI Calculator. Wszystkie prawa\nzastrzeżone.',
+                '© 2026 Wholesale ROI Calculator. Wszystkie prawa\nzastrzeżone.',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 11, color: Colors.grey),
               ),
