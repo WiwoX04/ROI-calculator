@@ -475,12 +475,7 @@ class FinishScreen extends StatelessWidget {
                     title: 'Dokładne dane',
                     subtitle: 'Wyliczenia oparte o marże hurtowe',
                   ),
-                  const SizedBox(height: 12),
-                  _buildMobileFeatureCard(
-                    icon: Icons.lock_outline,
-                    title: 'Prywatność',
-                    subtitle: 'Twoje dane są szyfrowane',
-                  ),
+
                   const SizedBox(height: 12),
                   _buildMobileFeatureCard(
                     icon: Icons.cloud_done_outlined,
