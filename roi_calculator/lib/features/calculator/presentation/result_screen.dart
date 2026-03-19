@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:roi_calculator/assets/services/mail_service.dart';
@@ -455,8 +456,6 @@ class ResultScreen extends StatelessWidget {
     );
   }
 
-
-
   Widget _buildProgressBar(String label, String value, double percentage) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -733,22 +732,34 @@ class ResultScreen extends StatelessWidget {
   // ==========================================
 
   void _handlePdfDownload() {
-    PdfService.downloadPdf(
-      roi: roi,
-      benefit: benefit,
-      marginIncrease: marginIncrease,
-      roiTime: roitime,
-      errorSavings: esavings,
-      migrationSavings: msavings,
-      selectedIndustry: selectedIndustry,
-    );
+    if (Platform.isWindows) {
+      PdfService.downloadPdf(
+        roi: roi,
+        benefit: benefit,
+        marginIncrease: marginIncrease,
+        roiTime: roitime,
+        errorSavings: esavings,
+        migrationSavings: msavings,
+        selectedIndustry: selectedIndustry,
+      );
+    } else if (Platform.isAndroid || Platform.isIOS) {
+      PdfService.downloadPdfMobile(
+        roi: roi,
+        benefit: benefit,
+        marginIncrease: marginIncrease,
+        roiTime: roitime,
+        errorSavings: esavings,
+        migrationSavings: msavings,
+        selectedIndustry: selectedIndustry,
+      );
+    }
   }
 
   void _handleShare() {
-    if (Platform.isWindows) {
+    if (kIsWeb) {
       _handlePdfDownload();
     } else if (Platform.isAndroid || Platform.isIOS) {
-      PdfService.downloadPdfMobile(
+      PdfService.sharePdf(
         roi: roi,
         benefit: benefit,
         marginIncrease: marginIncrease,
