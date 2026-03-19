@@ -11,7 +11,7 @@ Future<void> sendResultsEmail({
 }) async {
   // 1. Tworzymy czytelną treść maila
   final String body = '''
-Raport ROI - Wholesale Calculator
+Raport ROI Calculator
 Branża: $selectedIndustry
 
 WYNIKI:
@@ -29,8 +29,7 @@ Wygenerowano automatycznie przez ROI Calculator.
   // 2. Konstruujemy URI
   final Uri emailLaunchUri = Uri(
     scheme: 'mailto',
-    path:
-        'wiktor.sterczala.xd@gmail.com', // Możesz tu wpisać domyślnego maila, np. 'biuro@firma.pl'
+    path: '', // Możesz tu wpisać domyślnego maila, np. 'biuro@firma.pl'
     query: _encodeQueryParameters({
       'subject':
           'Raport ROI - $selectedIndustry - ${DateTime.now().toString().substring(0, 10)}',

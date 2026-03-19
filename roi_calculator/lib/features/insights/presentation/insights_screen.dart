@@ -8,7 +8,8 @@ class InsightsScreen extends StatelessWidget {
   final double roitime;
   final double esavings;
   final double msavings;
-  final selectedIndustry;
+  final dynamic selectedIndustry;
+
   const InsightsScreen({
     super.key,
     required this.roi,
@@ -23,13 +24,11 @@ class InsightsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(
-        0xFFF8F9FB,
-      ), // Jasne tło, takie jak wcześniej
+      backgroundColor: const Color(0xF8FAFC),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Color(0xFFFFFFFF),
+        surfaceTintColor: Color(0xFFFFFFFF),
         elevation: 0,
-        // Dodajemy przycisk powrotu (jeśli to kolejny ekran)
         title: Row(
           children: [
             Container(
@@ -55,169 +54,189 @@ class InsightsScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // 1. Główny tytuł
-              const Text(
-                'Jak dowieźć taki\nwynik w praktyce?',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w900,
-                  height: 1.2,
-                  color: Color(0xFF1A1F2C), // Ciemny granat/czerń
-                ),
-              ),
-              const SizedBox(height: 16),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              // Obliczamy liczbę kolumn na podstawie szerokości ekranu
+              int crossAxisCount = constraints.maxWidth > 900 ? 3 : 1;
 
-              // 2. Podtytuł
-              const Text(
-                'Wdrożenie aplikacji to nie tylko\ntechnologia, to przede wszystkim\nwygoda Twoich klientów i\nefektywność procesów.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.blueGrey,
-                  height: 1.5,
-                ),
-              ),
-              const SizedBox(height: 40),
+              // Obliczamy szerokość pojedynczej karty (odejmujemy odstępy)
+              double spacing = 20.0;
+              double itemWidth =
+                  (constraints.maxWidth - (spacing * (crossAxisCount - 1))) /
+                  crossAxisCount;
 
-              _buildFeatureCard(
-                icon: Icons.wifi_off,
-                title: 'Obsługa offline',
-                description:
-                    'Na budowach często nie ma internetu. Aplikacja musi działać płynnie bez zasięgu.',
-              ),
-              const SizedBox(height: 20),
-
-              _buildFeatureCard(
-                icon: Icons.smartphone,
-                title: 'Prosty UX mobilny',
-                description:
-                    'Strony e-commerce są trudne w użyciu na telefonie. Dedykowana aplikacja to 3x szybsze zamówienie.',
-              ),
-              const SizedBox(height: 20),
-              _buildFeatureCard(
-                icon: Icons.notifications_outlined,
-                title: 'Powiadomienia Push',
-                description:
-                    'Tańsze niż SMS i bardziej\nskuteczne. Bezpośredni kanał\ndotarcia z promocjami.',
-              ),
-              const SizedBox(height: 20),
-              _buildFeatureCard(
-                icon: Icons.touch_app,
-                title: 'Duże przyciski',
-                description:
-                    'Użytkownicy często mają rękawice lub pracują w trudnych warunkach. UI musi być \'pancerny\'',
-              ),
-              const SizedBox(height: 20),
-              _buildFeatureCard(
-                icon: Icons.wb_sunny_outlined,
-                title: 'Jasny motyw i kontrast',
-                description:
-                    'Lepsza widoczność w słońcu na budowie. Opcjonalny tryb ciemny do pracy w ciemnych piwnicach.',
-              ),
-              const SizedBox(height: 20),
-              _buildFeatureCard(
-                icon: Icons.group,
-                title: 'Współpraca handlowców',
-                description:
-                    'System prowizyjny musi wspierać zamówienia online, by handlowcy byli ambasadorami aplikacji.',
-              ),
-              const SizedBox(height: 20),
-              _buildFeatureCard(
-                icon: Icons.build,
-                title: 'Narzędzia branżowe',
-                description:
-                    'Kalkulatory i przeliczniki wbudowane w aplikacje to ekstra wartość, która przyciąga klienta codziennie.',
-              ),
-              const SizedBox(height: 40),
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.go('/finish');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(
-                      0xFF007BFF,
-                    ), // Jaskrawy niebieski
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Jak dowieźć taki\nwynik w praktyce?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w900,
+                      height: 1.2,
+                      color: Color(0xFF1A1F2C),
                     ),
-                    elevation: 0,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        'Dalej',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Wdrożenie aplikacji to nie tylko\ntechnologia, to przede wszystkim\nwygoda Twoich klientów i\nefektywność procesów.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.blueGrey,
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+
+                  // Kontener z kartami ułożonymi responsywnie
+                  Wrap(
+                    spacing: spacing, // Odstęp poziomy
+                    runSpacing: spacing, // Odstęp pionowy
+                    alignment: WrapAlignment.center,
+                    children: [
+                      _buildFeatureCard(
+                        width: itemWidth,
+                        icon: Icons.wifi_off,
+                        title: 'Obsługa offline',
+                        description:
+                            'Na budowach często nie ma internetu. Aplikacja musi działać płynnie bez zasięgu.',
                       ),
-                      SizedBox(width: 8),
-                      Icon(Icons.arrow_right_alt, color: Colors.white),
+                      _buildFeatureCard(
+                        width: itemWidth,
+                        icon: Icons.smartphone,
+                        title: 'Prosty UX mobilny',
+                        description:
+                            'Strony e-commerce są trudne w użyciu na telefonie. Dedykowana aplikacja to 3x szybsze zamówienie.',
+                      ),
+                      _buildFeatureCard(
+                        width: itemWidth,
+                        icon: Icons.notifications_outlined,
+                        title: 'Powiadomienia Push',
+                        description:
+                            'Tańsze niż SMS i bardziej skuteczne. Bezpośredni kanał dotarcia z promocjami.',
+                      ),
+                      _buildFeatureCard(
+                        width: itemWidth,
+                        icon: Icons.touch_app,
+                        title: 'Duże przyciski',
+                        description:
+                            'Użytkownicy często mają rękawice lub pracują w trudnych warunkach. UI musi być \'pancerny\'',
+                      ),
+                      _buildFeatureCard(
+                        width: itemWidth,
+                        icon: Icons.wb_sunny_outlined,
+                        title: 'Jasny motyw i kontrast',
+                        description:
+                            'Lepsza widoczność w słońcu na budowie. Opcjonalny tryb ciemny do pracy w ciemnych piwnicach.',
+                      ),
+                      _buildFeatureCard(
+                        width: itemWidth,
+                        icon: Icons.group,
+                        title: 'Współpraca handlowców',
+                        description:
+                            'System prowizyjny musi wspierać zamówienia online, by handlowcy byli ambasadorami aplikacji.',
+                      ),
+                      _buildFeatureCard(
+                        width: itemWidth,
+                        icon: Icons.build,
+                        title: 'Narzędzia branżowe',
+                        description:
+                            'Kalkulatory i przeliczniki wbudowane w aplikacje to ekstra wartość, która przyciąga klienta codziennie.',
+                      ),
                     ],
                   ),
-                ),
-              ),
-              const SizedBox(height: 40),
 
-              // 7. Stopka
-              const Text(
-                '© 2024 Wholesale ROI Calculator. Wszystkie prawa\nzastrzeżone.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 11, color: Colors.grey),
-              ),
-              const SizedBox(height: 20),
-            ],
+                  const SizedBox(height: 40),
+
+                  // Przycisk "Dalej" - ograniczamy jego szerokość na Webie, żeby nie był gigantyczny
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 400),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          context.go(
+                            '/finish?roi=$roi'
+                            '&benefit=$benefit'
+                            '&marginIncrease=$marginIncrease'
+                            '&esavings=$esavings'
+                            '&msavings=$msavings'
+                            '&roitime=$roitime'
+                            '&selectedIndustry=$selectedIndustry',
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF007BFF),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Dalej',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Icon(Icons.arrow_right_alt, color: Colors.white),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  const Text(
+                    '© 2026 Wholesale ROI Calculator. Wszystkie prawa\nzastrzeżone.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 11, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              );
+            },
           ),
         ),
       ),
     );
   }
 
-  // Metoda budująca pojedynczą kartę informacyjną
   Widget _buildFeatureCard({
+    required double width,
     required IconData icon,
     required String title,
     required String description,
   }) {
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24.0), // Duży wewnętrzny margines (oddech)
+      width: width,
+      // Minimalna wysokość, aby karty w jednym rzędzie były równe nawet przy różnej długości tekstu
+      constraints: const BoxConstraints(minHeight: 220),
+      padding: const EdgeInsets.all(24.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.grey.shade200, // Delikatna ramka
-          width: 1.5,
-        ),
+        border: Border.all(color: Colors.grey.shade200, width: 1.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Ikona w jasnoniebieskim kwadracie
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0xFFE6F2FF), // Bardzo jasny niebieski
+              color: const Color(0xFFE6F2FF),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
-              icon,
-              color: const Color(0xFF007BFF), // Jaskrawy niebieski
-              size: 24,
-            ),
+            child: Icon(icon, color: const Color(0xFF007BFF), size: 24),
           ),
           const SizedBox(height: 20),
-
-          // Tytuł karty
           Text(
             title,
             style: const TextStyle(
@@ -227,8 +246,6 @@ class InsightsScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-
-          // Opis karty
           Text(
             description,
             style: const TextStyle(

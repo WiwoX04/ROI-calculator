@@ -37,7 +37,7 @@ class RoiCalculator {
     final benefit =
         savings + marginIncrease + errorSavings + 10000 + 7000 + 12000;
     final cost = (state.capex + state.opex);
-    final roi = (benefit - cost) / cost * 100;
+    final roi = benefit /state.opex * 100;
     final RoiTime = state.capex / ((benefit - state.opex) / 12);
     return RoiResult(
       benefit: benefit, //

@@ -81,10 +81,23 @@ class _PercentageInputState extends State<PercentageInput> {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             decoration: InputDecoration(
+              iconColor: Color(0xFFE2E8F0),
+
               suffixText: "%",
+              suffixStyle: const TextStyle(
+                color: Color(0xFF94A3B8), // kolor "zł"
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(
+                  color: Color(0xFFE2E8F0), // Twój kolor
+                  width: 1,
+                ),
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
+
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: const BorderSide(color: Colors.blue, width: 2),

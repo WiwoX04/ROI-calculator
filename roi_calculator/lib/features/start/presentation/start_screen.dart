@@ -13,139 +13,226 @@ class StartScreen extends StatefulWidget {
 
 class _StartScreenState extends State<StartScreen> {
   IndustryType? selectedIndustry;
+
   @override
   Widget build(BuildContext context) {
+    // Odczytujemy szerokość ekranu dla responsywności siatki
+    final screenWidth = MediaQuery.of(context).size.width;
+    int crossAxisCount = 3;
+    if (screenWidth < 600) {
+      crossAxisCount = 1;
+    } else if (screenWidth < 900) {
+      crossAxisCount = 2;
+    }
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(
+        0xF8FAFC,
+      ), // Bardzo jasne szare tło z designu
       appBar: AppBar(
-        foregroundColor: Color(0xFFE2E8F0),
+        backgroundColor: Color(0xFFFFFFFF),
+        surfaceTintColor: Color(0xFFFFFFFF),
         elevation: 0,
+        centerTitle: false,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0),
+          child: Container(color: Colors.grey.shade200, height: 1.0),
+        ),
         title: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: const Color(0xFF007BFF),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(Icons.calculate, color: Colors.white, size: 18),
+              child: const Icon(
+                Icons.grid_view_rounded,
+                color: Colors.white,
+                size: 18,
+              ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 12),
             const Text(
-              'Kalkulator Roi',
+              'Kalkulator ROI',
               style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                color: Color(0xFF0F172A),
               ),
             ),
           ],
         ),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "Policz ROI aplikacji\n mobilnej dla\n hurtowni w 2\n minuty",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 40,
-                  color: Colors.black,
-                ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxWidth: 850,
+            ), // Ograniczenie szerokości na PC/Web
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24.0,
+                vertical: 48.0,
               ),
-              SizedBox(height: 20),
-              Text(
-                "Narzędzie pozwala oszacować\n potencjalne korzyści z wdrożenia\n aplikacji mobilnej dla twoich klientów.\nDane możnesz w każdej chwili zmienić,a\n wynik jest estymacją.",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-              ),
-              SizedBox(height: 20),
-              GridView.builder(
-                shrinkWrap: true,
-                itemCount: industries.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  childAspectRatio: 1,
-                ),
-                itemBuilder: (context, index) {
-                  final industry = industries[index];
-                  return IndustryCard(
-                    industry: industry,
-                    selected: selectedIndustry == industry,
-                    onTap: () {
-                      setState(() {
-                        selectedIndustry = industry;
-                      });
-                    },
-                  );
-                },
-              ),
-              SizedBox(height: 40),
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.go(
-                      '/calculator?selectedIndustry=${selectedIndustry?.name}',
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(
-                      0xFF007BFF,
-                    ), // Jaskrawy niebieski
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+              child: Column(
+                crossAxisAlignment:
+                    CrossAxisAlignment.start, // Wyrównanie do lewej
+                children: [
+                  // 1. Tytuł
+                  const Text(
+                    "Policz ROI aplikacji mobilnej dla hurtowni w 2 minuty",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 42,
+                      height: 1.1,
+                      color: Color(0xFF0F172A),
                     ),
-                    elevation: 0,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                  const SizedBox(height: 16),
+
+                  // 2. Sub-tytuł
+                  const Text(
+                    "Narzędzie pozwala oszacować potencjalne korzyści z wdrożenia aplikacji mobilnej dla Twoich klientów. Dane możesz w każdej chwili zmienić, a wynik jest estymacją.",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF64748B),
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 48),
+
+                  // 3. Nagłówek siatki
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.storefront_outlined,
+                        color: Color(0xFF007BFF),
+                      ),
+                      const SizedBox(width: 8),
                       Text(
-                        'Szybka estymacja',
+                        "Wybór typu hurtowni",
                         style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.blueGrey.shade800,
                         ),
                       ),
-                      SizedBox(width: 8),
-                      Icon(Icons.trending_up, color: Colors.white),
                     ],
                   ),
-                ),
-              ),
-              const SizedBox(height: 12),
+                  const SizedBox(height: 16),
 
-              // 6. Drobny tekst pod przyciskiem
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(Icons.bolt, size: 14, color: Colors.blueGrey),
-                  SizedBox(width: 4),
-                  Text(
-                    'Analiza potrwa mniej niż 120 sekund',
-                    style: TextStyle(fontSize: 12, color: Colors.blueGrey),
+                  // 4. Siatka (Grid) z kartami
+                  GridView.builder(
+                    physics:
+                        const NeverScrollableScrollPhysics(), // Scrollowanie obsługuje SingleChildScrollView
+                    shrinkWrap: true,
+                    itemCount: industries.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      childAspectRatio:
+                          1.4, // Zmienione proporcje karty (szersza niż wyższa)
+                    ),
+                    itemBuilder: (context, index) {
+                      final industry = industries[index];
+                      return IndustryCard(
+                        industry: industry,
+                        selected: selectedIndustry == industry,
+                        onTap: () {
+                          setState(() {
+                            selectedIndustry = industry;
+                          });
+                        },
+                      );
+                    },
                   ),
+                  const SizedBox(height: 48),
+
+                  // 5. Przycisk (Wyśrodkowany)
+                  Center(
+                    child: SizedBox(
+                      height: 56,
+                      child: ElevatedButton(
+                        onPressed:
+                            selectedIndustry == null
+                                ? null // Przycisk wyłączony, dopóki nie wybierzemy branży
+                                : () {
+                                  context.go(
+                                    '/calculator?selectedIndustry=${selectedIndustry?.name}',
+                                  );
+                                },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF007BFF),
+                          disabledBackgroundColor: Colors.grey.shade300,
+                          padding: const EdgeInsets.symmetric(horizontal: 48),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              100,
+                            ), // Kształt pigułki z designu
+                          ),
+                          elevation: 0,
+                        ),
+                        child: Row(
+                          mainAxisSize:
+                              MainAxisSize
+                                  .min, // Przycisk dopasowuje się do tekstu
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text(
+                              'Szybka estymacja',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Icon(
+                              Icons.arrow_outward,
+                              color: Colors.white,
+                              size: 20,
+                            ), // Strzałka "w prawo do góry"
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // 6. Drobny tekst pod przyciskiem
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.bolt, size: 16, color: Color(0xFF94A3B8)),
+                        SizedBox(width: 4),
+                        Text(
+                          'Analiza potrwa mniej niż 120 sekund',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Color(0xFF94A3B8),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 64),
+
+                  // 7. Stopka
+                  const Center(
+                    child: Text(
+                      '© 2026 ROI Calculator. Wszelkie prawa zastrzeżone.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                 ],
               ),
-              const SizedBox(height: 40),
-
-              // 7. Stopka
-              const Text(
-                '© 2026 Wholesale ROI Calculator. Wszystkie prawa\nzastrzeżone.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 11, color: Colors.grey),
-              ),
-              const SizedBox(height: 20),
-            ],
+            ),
           ),
         ),
       ),

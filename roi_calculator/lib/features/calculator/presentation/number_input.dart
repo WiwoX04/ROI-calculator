@@ -78,8 +78,18 @@ class _NumberInputState extends State<NumberInput> {
             ],
             decoration: InputDecoration(
               suffixText: widget.suffix,
+              suffixStyle: const TextStyle(
+                color: Color(0xFF94A3B8), // kolor "zł"
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(
+                  color: Color(0xFFE2E8F0), // Twój kolor
+                  width: 1,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),

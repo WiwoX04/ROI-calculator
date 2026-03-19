@@ -18,7 +18,11 @@ class PdfService {
     required double migrationSavings,
     required dynamic selectedIndustry,
   }) async {
-    final pdf = pw.Document();
+    final font = await PdfGoogleFonts.robotoRegular();
+    final fontBold = await PdfGoogleFonts.robotoBold();
+    final pdf = pw.Document(
+      theme: pw.ThemeData.withFont(base: font, bold: fontBold),
+    );
 
     pdf.addPage(
       pw.Page(
