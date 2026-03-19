@@ -156,7 +156,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xF8FAFC), // Delikatne tło
+      backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
         backgroundColor: Color(0xFFFFFFFF),
         surfaceTintColor: Color(0xFFFFFFFF),

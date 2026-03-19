@@ -27,7 +27,7 @@ class _StartScreenState extends State<StartScreen> {
 
     return Scaffold(
       backgroundColor: const Color(
-        0xF8FAFC,
+        0xFFF8FAFC,
       ), // Bardzo jasne szare tło z designu
       appBar: AppBar(
         backgroundColor: Color(0xFFFFFFFF),
